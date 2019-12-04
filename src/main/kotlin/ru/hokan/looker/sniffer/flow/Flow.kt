@@ -1,5 +1,6 @@
 package ru.hokan.looker.sniffer.flow
 
 interface Flow {
-    fun executeFlow() : Unit
+    fun executeFlow()
+    fun getFlowName() : String
 }

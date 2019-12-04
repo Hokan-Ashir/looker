@@ -1,10 +1,13 @@
 package ru.hokan.looker.sources.providers
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
+import ru.hokan.looker.sources.sources.Source
 
 @Service
-class DarkNetSourcesProvider : SourcesProvider {
-    override fun getSources(): List<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class DarkNetSourcesProvider(@Qualifier("darkNet") @Autowired val sourceList: List<Source>) : SourcesProvider {
+    override fun getSources(): List<Source> {
+        return sourceList
     }
 }

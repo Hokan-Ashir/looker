@@ -1,6 +1,7 @@
 package ru.hokan.looker.sniffer.flow
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import ru.hokan.looker.proxy.selectors.ProxyProvidersSelector
 import ru.hokan.looker.sniffer.processors.postprocessors.PostProcessor
@@ -13,21 +14,23 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 @Service
-class StandardFow(@Autowired val sniffingStrategy: SniffingStrategy,
-                  @Autowired val proxyProvidersSelector: ProxyProvidersSelector,
-                  @Autowired val sourcesSelector: SourceSelector,
-                  @Autowired val preProcessors : List<PreProcessor>,
-                  @Autowired val postProcessors : List<PostProcessor>,
-                  @Autowired val savers : List<Saver>) : Flow {
+class StandardFlow(@Autowired val sniffingStrategy: SniffingStrategy,
+                   @Autowired val proxyProvidersSelector: ProxyProvidersSelector,
+                   @Autowired val sourcesSelector: SourceSelector,
+                   @Autowired val preProcessors : List<PreProcessor>,
+                   @Autowired val postProcessors : List<PostProcessor>,
+                   @Autowired val savers : List<Saver>) : Flow {
+    @Value("\${looker.number.of.sources.to.try}")
+    var numberOfSourcesToTry : Int? = null
 
-    val numberOfSourcesToTry = 50
-    val numberOfThreads = 10
+    @Value("\${looker.number.of.threads}")
+    var numberOfThreads : Int? = null
 
     override fun executeFlow() {
-        val executorService = Executors.newFixedThreadPool(numberOfThreads)
-        val executions = (1..numberOfThreads).map {
+        val executorService = Executors.newFixedThreadPool(numberOfThreads!!)
+        val executions = (1..numberOfThreads!!).map {
             Callable {
-                for (i in 1..numberOfSourcesToTry) {
+                for (i in 1..numberOfSourcesToTry!!) {
                     val proxySource = proxyProvidersSelector.getProxySource()
                     val source = sourcesSelector.getSource()
                     val contentEntities = sniffingStrategy.sniffSource(source, proxySource)
@@ -39,5 +42,13 @@ class StandardFow(@Autowired val sniffingStrategy: SniffingStrategy,
         }.toCollection(ArrayList())
         executorService.invokeAll(executions)
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS)
+    }
+
+    override fun getFlowName(): String {
+        return STANDARD_FLOW_NAME
+    }
+
+    companion object {
+        const val STANDARD_FLOW_NAME = "standard"
     }
 }
