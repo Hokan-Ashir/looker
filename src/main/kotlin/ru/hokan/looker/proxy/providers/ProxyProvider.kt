@@ -1,7 +1,8 @@
 package ru.hokan.looker.proxy.providers
 
+import ru.hokan.looker.proxy.providers.database.dto.Proxy
+
 interface ProxyProvider {
-    fun getProxies() : List<String>
-    fun getProxyProviderName() : String
-    fun extractProxyList() : List<String>
+    fun register()
+    fun getProxyList() : List<Proxy>
 }
