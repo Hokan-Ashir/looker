@@ -13,6 +13,7 @@ class RandomizedProxySelector(@Autowired val proxyRepository: ProxyRepository) :
 
     override fun getProxySource(): String {
         val totalProxiesCount = proxyRepository.count()
+        // TODO check this formulae
         val randomProxyTableIndex = min(totalProxiesCount, Random(0).nextInt() * totalProxiesCount)
         val proxiesPage = proxyRepository.findAll(PageRequest.of(randomProxyTableIndex.toInt(), 1))
         return proxiesPage.get().findAny().get().IP

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
+import ru.hokan.looker.proxy.suppliers.ProxySupplier
 import java.time.Duration
 
 @Configuration
@@ -17,7 +18,7 @@ class ProxyConfiguration {
     lateinit var proxySupplier: ProxySupplier
 
     @Bean
-    fun threadPoolTaskScheduler(): ThreadPoolTaskScheduler {
+    fun proxiesThreadPoolTaskScheduler(): ThreadPoolTaskScheduler {
         val taskScheduler = ThreadPoolTaskScheduler()
         taskScheduler.poolSize = 10
         taskScheduler.initialize()

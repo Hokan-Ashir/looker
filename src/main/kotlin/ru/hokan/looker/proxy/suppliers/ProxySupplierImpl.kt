@@ -1,4 +1,4 @@
-package ru.hokan.looker.proxy
+package ru.hokan.looker.proxy.suppliers
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
