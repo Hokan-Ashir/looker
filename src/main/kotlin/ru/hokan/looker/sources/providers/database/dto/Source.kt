@@ -16,5 +16,5 @@ data class Source(
         val regexp: String,
 
         @Column(nullable = false)
-        val sourceProviderId: Int
+        var sourceProviderId: Int
 )
